@@ -21,7 +21,7 @@ public class LandingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_landing);
 
         MessageService taskService = ServiceBuilder.buildService(MessageService.class);
-        Call<String> call = taskService.getMessages();
+        Call<String> call = taskService.getMessages("http://192.168.0.7:9000/messages");
 
         call.enqueue(new Callback<String>() {
             @Override
