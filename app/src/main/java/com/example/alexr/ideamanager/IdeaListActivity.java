@@ -18,6 +18,7 @@ import com.example.alexr.ideamanager.models.Idea;
 import com.example.alexr.ideamanager.services.IdeaService;
 import com.example.alexr.ideamanager.services.ServiceBuilder;
 
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -54,8 +55,12 @@ public class IdeaListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
+        HashMap<String, String> filters = new HashMap<>();
+        filters.put("owner", "Jim");
+        filters.put("count", "1");
+
         IdeaService ideaService = ServiceBuilder.buildService(IdeaService.class);
-        Call<List<Idea>> ideasRequest = ideaService.getIdeas("Jim");
+        Call<List<Idea>> ideasRequest = ideaService.getIdeas(filters);
 
         ideasRequest.enqueue(new Callback<List<Idea>>() {
             @Override
