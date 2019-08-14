@@ -60,7 +60,7 @@ public class IdeaListActivity extends AppCompatActivity {
         filters.put("count", "1");
 
         IdeaService ideaService = ServiceBuilder.buildService(IdeaService.class);
-        Call<List<Idea>> ideasRequest = ideaService.getIdeas(filters);
+        Call<List<Idea>> ideasRequest = ideaService.getIdeas("EN", filters);
 
         ideasRequest.enqueue(new Callback<List<Idea>>() {
             @Override
