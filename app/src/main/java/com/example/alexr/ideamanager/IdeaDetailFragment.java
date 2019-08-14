@@ -111,9 +111,21 @@ public class IdeaDetailFragment extends Fragment {
         deleteIdea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SampleContent.deleteIdea(getArguments().getInt(ARG_ITEM_ID));
-                Intent intent = new Intent(getContext(), IdeaListActivity.class);
-                startActivity(intent);
+                IdeaService ideaService = ServiceBuilder.buildService(IdeaService.class);
+                Call<Void> deleteRequest = ideaService.deleteIdea(getArguments().getInt(ARG_ITEM_ID));
+
+                deleteRequest.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> request, Response<Void> response) {
+                        Intent intent = new Intent(getContext(), IdeaListActivity.class);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> request, Throwable t) {
+                        Toast.makeText(context, "Failed to delete item.", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 

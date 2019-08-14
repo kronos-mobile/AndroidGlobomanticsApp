@@ -7,6 +7,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -35,4 +36,7 @@ public interface IdeaService {
             @Field("status") String status,
             @Field("owner") String owner
     );
+
+    @DELETE("ideas/{id}")
+    Call<Void> deleteIdea(@Path("id") int id);
 }
