@@ -98,7 +98,7 @@ public class IdeaListActivity extends AppCompatActivity {
                     Toast.makeText(context, "Failed to retrieve ideas.", Toast.LENGTH_SHORT).show();
                 }
 
-                findViewById(R.id.layout_cancel).setVisibility(View.GONE);
+                 findViewById(R.id.layout_cancel).setVisibility(View.GONE);
             }
         });
 
