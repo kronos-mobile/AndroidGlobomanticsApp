@@ -10,4 +10,28 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.example.alexr.ideamanager.IdeaListActivity"
-    tools:listitem="@layout/idea_list_content" />
+    tools:listitem="@layout/idea_list_content">
+
+    <LinearLayout
+        android:id="@+id/layout_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ProgressBar
+            android:id="@+id/progressIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="CancelRequest"
+            android:text="Cancel"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+</android.support.v7.widget.RecyclerView>
+
