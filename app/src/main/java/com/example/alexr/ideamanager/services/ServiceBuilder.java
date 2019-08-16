@@ -4,6 +4,7 @@ import android.os.Build;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -23,6 +24,7 @@ public class ServiceBuilder {
     // create OkHttp Client
     private static OkHttpClient.Builder okHttp =
             new OkHttpClient.Builder()
+                    .readTimeout(15, TimeUnit.SECONDS)
                     .addInterceptor(new Interceptor() {
                         @Override
                         public Response intercept(Chain chain) throws IOException {
