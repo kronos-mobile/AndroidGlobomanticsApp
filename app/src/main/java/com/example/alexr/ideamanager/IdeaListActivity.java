@@ -18,6 +18,7 @@ import com.example.alexr.ideamanager.models.Idea;
 import com.example.alexr.ideamanager.services.IdeaService;
 import com.example.alexr.ideamanager.services.ServiceBuilder;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -65,12 +66,22 @@ public class IdeaListActivity extends AppCompatActivity {
         ideasRequest.enqueue(new Callback<List<Idea>>() {
             @Override
             public void onResponse(Call<List<Idea>> request, Response<List<Idea>> response) {
-                recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(response.body()));
+                if (response.isSuccessful()) {
+                    recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(response.body()));
+                } else if (response.code() == 401) {
+                    Toast.makeText(context, "Your session has expired", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Failed to retrieve items", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
             public void onFailure(Call<List<Idea>> request, Throwable t) {
-                Toast.makeText(context, "Failed to retrieve ideas.", Toast.LENGTH_SHORT).show();
+                if (t instanceof IOException) {
+                    Toast.makeText(context, "A connection error occured", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Failed to retrieve ideas.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
