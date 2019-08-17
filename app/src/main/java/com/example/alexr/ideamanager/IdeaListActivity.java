@@ -10,6 +10,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +20,7 @@ import com.example.alexr.ideamanager.models.Idea;
 import com.example.alexr.ideamanager.services.IdeaService;
 import com.example.alexr.ideamanager.services.ServiceBuilder;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,17 +63,42 @@ public class IdeaListActivity extends AppCompatActivity {
         filters.put("count", "1");
 
         IdeaService ideaService = ServiceBuilder.buildService(IdeaService.class);
-        Call<List<Idea>> ideasRequest = ideaService.getIdeas("EN", filters);
+        final Call<List<Idea>> ideasRequest = ideaService.getIdeas("EN", filters);
+
+        final ProgressBar loading = (ProgressBar) findViewById(R.id.progressIndicator);
+        final Button btnCancel = (Button) findViewById(R.id.btn_cancel);
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ideasRequest.cancel();
+            }
+        });
+
 
         ideasRequest.enqueue(new Callback<List<Idea>>() {
             @Override
             public void onResponse(Call<List<Idea>> request, Response<List<Idea>> response) {
-                recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(response.body()));
+                if (response.isSuccessful()) {
+                    recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(response.body()));
+                } else if (response.code() == 401) {
+                    Toast.makeText(context, "Your session has expired", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Failed to retrieve items", Toast.LENGTH_SHORT).show();
+                }
+
+                findViewById(R.id.layout_cancel).setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<List<Idea>> request, Throwable t) {
-                Toast.makeText(context, "Failed to retrieve ideas.", Toast.LENGTH_SHORT).show();
+                if (t instanceof IOException) {
+                    Toast.makeText(context, "A connection error occured", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Failed to retrieve ideas.", Toast.LENGTH_SHORT).show();
+                }
+
+                 findViewById(R.id.layout_cancel).setVisibility(View.GONE);
             }
         });
 
